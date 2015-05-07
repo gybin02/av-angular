@@ -21,7 +21,7 @@
 	  			})
 	  		}
 	  	})
-	  }
+	  };
 
 
 	  $scope.addItem = function () {
@@ -32,43 +32,35 @@
 		  news.set('image_url',$scope.newItem.image_url);
 		news.save(null,{
 			success:function(result){
-				$scope.news.push(news.toJSON());
-				$scope.newItem={news_url:'',news_desc:'',image_url:""};
-				alert("新增成功");
+				$scope.$apply(function(){
+					$scope.news.push(news.toJSON());
+					$scope.newItem={news_url:'',news_desc:'',image_url:""};
+					alert("新增成功");
+				})
 			}
 		});
 	  };
 
-	  //$scope.updateTodoState = function(todoParam) {
-	  //	//var Todo = AV.Object.extend("Todo");
-	  //	var todo = new News();
-	  //	todo.set("objectId",todoParam.objectId);
-	  //	todo.set("done",todoParam.done);
-	  //	todo.save(null, {
-	  //		success: function(result){
-	  //		}
-	  //	});
-	  //}
 		$scope.deleteItem=function(newsParam){
 			//var News = AV.Object.extend("News");
 			var news=new News();
 			news.set("objectId",newsParam.objectId);
 			news.destroy({
 				success: function(news){
-					alert("删除成功");
-					//console.error($scope.news.indexOf(newsParam));
-					$scope.news.splice($scope.news.indexOf(newsParam),1);
-					//console.error("success delete");
+					$scope.$apply(function(){
+						alert("删除成功");
+						$scope.news.splice($scope.news.indexOf(newsParam),1);
+					})
 				},
 				error:function(news,error){
 					console.error("fail delete");
 				}
 			});
-		}
+		};
 
 		$scope.editTemp=function(itemParam){
 			$scope.editTempItem=itemParam;
-		}
+		};
 
 		$scope.editItem=function(){
 			//var News =AV.Object.extend("News");
@@ -89,12 +81,52 @@
 					console.error("fail edit");
 				}
 			});
-		}
+		};
+
+		$scope.denyCar=function(itemParam){
+
+		};
 
     $scope.getItems();
 
 	}]);
+	module.controller('CarCtrl', function($scope) {
+		var Car=AV.Object.extend("Cars");
+		$scope.cars = [];
 
+		$scope.getCars = function() {
+			var query = new AV.Query(Car);
+			query.equalTo("status",2);
+			query.find({
+				success:function (results){
+					$scope.$apply(function(){
+						$scope.cars = JSON.parse(JSON.stringify(results));
+					})
+				}
+			})
+		};
+
+
+		$scope.passCar=function(itemParam){
+			var car = new Car();
+			car.set("objectId",itemParam.objectId);
+			car.set("status",1);
+			car.save(null,{
+				success: function () {
+					alert('审核通过');
+					$scope.$apply(function(){
+						$scope.cars.splice($scope.cars.indexOf(itemParam),1);
+					})
+				},
+				error:function(){
+					console.error("fail Pass Audit");
+				}
+			})
+		};
+
+		$scope.getCars();
+
+	})
 
 
 })();
