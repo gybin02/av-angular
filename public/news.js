@@ -144,7 +144,7 @@
 				success: function () {
 					alert('审核通过');
 					$scope.$apply(function(){
-						$scope.cars.splice($scope.cars.indexOf(itemParam),1);
+						$scope.carSold.splice($scope.carSold.indexOf(itemParam),1);
 					})
 				},
 				error:function(){
@@ -154,6 +154,7 @@
 		};
 
 		$scope.getCars();
+		$scope.getCarSold();
 
 	})
 
