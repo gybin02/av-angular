@@ -93,6 +93,7 @@
 	module.controller('CarCtrl', function($scope) {
 		var Car=AV.Object.extend("Cars");
 		$scope.cars = [];
+		$scope.carSold = [];
 
 		$scope.getCars = function() {
 			var query = new AV.Query(Car);
@@ -111,6 +112,34 @@
 			var car = new Car();
 			car.set("objectId",itemParam.objectId);
 			car.set("status",1);
+			car.save(null,{
+				success: function () {
+					alert('审核通过');
+					$scope.$apply(function(){
+						$scope.cars.splice($scope.cars.indexOf(itemParam),1);
+					})
+				},
+				error:function(){
+					console.error("fail Pass Audit");
+				}
+			})
+		};
+
+		$scope.getCarSold = function() {
+			var query = new AV.Query(Car);
+			query.equalTo("status",3);
+			query.find({
+				success:function (results){
+					$scope.$apply(function(){
+						$scope.carSold = JSON.parse(JSON.stringify(results));
+					})
+				}
+			})
+		};
+		$scope.passSoldCar=function(itemParam){
+			var car = new Car();
+			car.set("objectId",itemParam.objectId);
+			car.set("status",4);
 			car.save(null,{
 				success: function () {
 					alert('审核通过');
