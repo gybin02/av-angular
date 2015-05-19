@@ -1,45 +1,47 @@
 (function(){
 	var module = angular.module("newsModule",[]);
 	module.run(function() {
-	    AV.initialize("po6ihzz17t3wvqgzip3l3vk8fy1ucx0igogu4e3a68f7uhi4", "4higrd4vrv44fhwdeacxhepcjw2w8l4hldp2vogx3n08gcw8");
+		AV.initialize("po6ihzz17t3wvqgzip3l3vk8fy1ucx0igogu4e3a68f7uhi4", "4higrd4vrv44fhwdeacxhepcjw2w8l4hldp2vogx3n08gcw8");
 	});
 	module.controller("newsCtrl",['$http', '$scope', function($http, $scope){
 		var News = AV.Object.extend("news");
-		$scope.news = [];
-	  $scope.newItem = {news_url:'', news_desc:'',image_url:""};
+		$scope.news = [];//$scope是一个把view(一个DOM元素)连结到controller上的对象$scope，实际上就是一个JavaScript对象，
+						 // controller和view都可以访问它，所以我们可以利用它在两者间传递信息。
+						 // 在这个 $scope 对象里，我们既存储数据，又存储将要运行在view上的函数
+		$scope.newItem = {news_url:'', news_desc:'',image_url:""};
 
 		$scope.editTempItem={};
 
 
-	  $scope.getItems = function() {
-	  	//var Todo = AV.Object.extend("news");
-	  	var query = new AV.Query(News);
-	  	query.find({
-	  		success:function (results){
-	  			$scope.$apply(function(){
-	  				$scope.news = JSON.parse(JSON.stringify(results));
-	  			})
-	  		}
-	  	})
-	  };
+		$scope.getItems = function() {
+			//var Todo = AV.Object.extend("news");
+			var query = new AV.Query(News);
+			query.find({
+				success:function (results){
+					$scope.$apply(function(){
+						$scope.news = JSON.parse(JSON.stringify(results));
+					})
+				}
+			})
+		};
 
 
-	  $scope.addItem = function () {
-	  	//var News = AV.Object.extend("News");
-	  	var news = new News();
-		news.set('news_desc',$scope.newItem.news_desc);
-	  	news.set('news_url',$scope.newItem.news_url);
-		  news.set('image_url',$scope.newItem.image_url);
-		news.save(null,{
-			success:function(result){
-				$scope.$apply(function(){
-					$scope.news.push(news.toJSON());
-					$scope.newItem={news_url:'',news_desc:'',image_url:""};
-					alert("新增成功");
-				})
-			}
-		});
-	  };
+		$scope.addItem = function () {
+			//var News = AV.Object.extend("News");
+			var news = new News();
+			news.set('news_desc',$scope.newItem.news_desc);
+			news.set('news_url',$scope.newItem.news_url);
+			news.set('image_url',$scope.newItem.image_url);
+			news.save(null,{
+				success:function(result){
+					$scope.$apply(function(){
+						$scope.news.push(news.toJSON());
+						$scope.newItem={news_url:'',news_desc:'',image_url:""};
+						alert("新增成功");
+					})
+				}
+			});
+		};
 
 		$scope.deleteItem=function(newsParam){
 			//var News = AV.Object.extend("News");
@@ -87,7 +89,7 @@
 
 		};
 
-    $scope.getItems();
+		$scope.getItems();
 
 	}]);
 	module.controller('CarCtrl', function($scope) {
@@ -107,7 +109,7 @@
 			})
 		};
 
-
+		//卖车审核
 		$scope.passCar=function(itemParam){
 			var car = new Car();
 			car.set("objectId",itemParam.objectId);
@@ -124,7 +126,7 @@
 				}
 			})
 		};
-
+		//已交易车辆审核
 		$scope.getCarSold = function() {
 			var query = new AV.Query(Car);
 			query.equalTo("status",3);
