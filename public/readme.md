@@ -16,3 +16,9 @@
 ## 网站托管
 
 使用云代码在AVOS Cloud上托管您的网站，参见[云代码开发指南](https://cn.avoscloud.com/docs/cloud_code_guide.html)。
+## 介绍
+小群朋友毕业设计：二手车交易管理。 使用AngularJs实现
+## 功能
+ 1. 新闻管理
+ 2. 卖车审核
+ 3. 已交易二手车审核
